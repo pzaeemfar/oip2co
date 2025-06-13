@@ -4,26 +4,22 @@ A simple command-line tool that converts IP addresses to country codes. It uses 
 
 ## Features
 
-- Fast IP-to-country lookups
-- Reads IPs from stdin
-- Clean, simple output format
-- Automatic database download
-- Silent mode by default
+- Fast IP-to-country lookups  
+- Reads IPs from stdin or command-line arguments  
+- Clean, simple output format  
+- Automatic database download  
+- Silent mode by default, use `-debug` for detailed logs  
 
 ## Installation
 
 ```bash
 go install github.com/pzaeemfar/oip2co@latest
-```
+````
 
-### Options
-
-- `-s=false`: Show debug messages (default is silent mode)
-
-## Examples
+## Usage
 
 ```bash
-# Look up Google's DNS
+# Look up Google's DNS (using stdin)
 echo "8.8.8.8" | oip2co
 # Output: 8.8.8.8 - US
 
@@ -34,11 +30,18 @@ echo "192.168.1.1" | oip2co
 # Look up an IPv6 address
 echo "2001:4860:4860::8888" | oip2co
 # Output: 2001:4860:4860::8888 - US
+
+# Look up IPs via command line arguments (if no stdin)
+oip2co 8.8.8.8 1.1.1.1
 ```
+
+## Options
+
+* `-debug` : Enable debug output (default is silent mode)
 
 ## Notes
 
-- The program automatically downloads and updates the GeoLite2 database
-- Invalid IP addresses are skipped
-- Private IP ranges return "Unknown" as country code
-- The database is stored in `/tmp/GeoLite2-Country.mmdb`
+* The program automatically downloads the GeoLite2 database to `/tmp/GeoLite2-Country.mmdb` if missing
+* Invalid IP addresses are skipped with optional debug info
+* Private and unrecognized IP ranges return "Unknown" as country code
+* If stdin is empty, IPs from CLI arguments are used
