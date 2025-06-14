@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -20,6 +21,7 @@ const (
 
 func main() {
 	debug := flag.Bool("debug", false, "enable debug output")
+	jsonOut := flag.Bool("json", false, "output results as JSON")
 	flag.Parse()
 
 	if _, err := os.Stat(targetPath); err != nil {
@@ -94,6 +96,9 @@ func main() {
 		}
 	}
 
+	// Store results in a map for JSON output
+	results := make(map[string]string)
+
 	for _, ipStr := range ips {
 		ip := net.ParseIP(ipStr)
 		if ip == nil {
@@ -120,6 +125,21 @@ func main() {
 			countryCode = "Unknown"
 		}
 
-		fmt.Printf("%s - %s\n", ipStr, countryCode)
+		if *jsonOut {
+			results[ipStr] = countryCode
+		} else {
+			fmt.Printf("%s - %s\n", ipStr, countryCode)
+		}
+	}
+
+	if *jsonOut {
+		outJSON, err := json.Marshal(results)
+		if err != nil {
+			if *debug {
+				fmt.Fprintf(os.Stderr, "Error marshaling JSON: %v\n", err)
+			}
+			return
+		}
+		fmt.Println(string(outJSON))
 	}
 }
