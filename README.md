@@ -18,7 +18,7 @@ A simple command-line tool that converts IP addresses to country codes. It uses 
 ## Installation
 
 ```bash
-go install github.com/pzaeemfar/oip2co@latest
+GOPROXY=direct go install github.com/pzaeemfar/oip2co@latest
 ```
 
 ## Usage (Examples)
